@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block pagetitle %}My Characters{% endblock pagetitle %}
+
+{% block content %}
+{% if object_list.count < max_toons %}<a href="{% url 'player:create' %}">Create Character</a>{% endif %}<hr>
+    <ul>
+    {% for this in object_list %}
+        <li>{{ this }} [<a href="{% url 'player:select' pk=this.pk %}">play</a>]
+        {% if cfg.playing_toon == this %}
+            **logged in**
+        {% endif %}
+        </li>
+    {% empty %}
+        <li>no characters found</li>
+    {% endfor %}
+    </ul>
+{% endblock content %}

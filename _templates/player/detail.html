@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block pagetitle %}View Character{% endblock pagetitle %}
+
+{% block content %}
+    {{ object }}<br>
+    {{ object.where }}<br>
+    {{ object.where.notes }}
+{% endblock content %}

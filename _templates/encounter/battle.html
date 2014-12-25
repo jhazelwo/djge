@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block pagetitle %} FIGHT!!{% endblock pagetitle %}
+
+{% block content %}
+
+    {% for this in fight %}
+        My HP: {{ this.name.life }}
+        <hr>
+        <ul>
+        {% for enemy in this.npcs.all %}
+            <li>{{ enemy }}, HP:{{ enemy.life }}<a href="{% url 'encounter:attack' npcid=enemy.id %}"> Attack!</a></li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+
+{% endblock content %}
