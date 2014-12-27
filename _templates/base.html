@@ -20,14 +20,12 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body role="document"><center>Welcome, {{ user.get_full_name }}</center><hr>
+    <body role="document">
         <div class="container theme-showcase" role="main">
         {% if messages %}
-            <div class="blog-header">
                 {% for message in messages %}
-                    <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+                    <p {% if message.tags %} class="bg-{{ message.tags }}"{% endif %}>{{ message }}</p>
                 {% endfor %}
-            </div>
         {% endif %}
         {% if form.non_field_errors %}
             <div class="blog-header">
@@ -36,6 +34,13 @@
                 {% endfor %}
             </div>
         {% endif %}
+            {% if character %}
+                <a href="{% url 'player:detail' pk=character.id %}">{{ character }}</a>,
+                HP={{ character.life }}
+                @
+                {{ character.where }};
+                {{ character.where.notes }}<br><br>
+            {% endif %}
             {% block content %}{% endblock %}
         </div><!-- class="container theme-showcase" role="main" -->
         <script src="{% static 'js/jquery.min.js' %}"></script><!-- Placed at the end of the document so the pages load faster -->        

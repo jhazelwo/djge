@@ -6,5 +6,5 @@ from django.conf.urls import patterns, include, url
 from . import views
 
 urlpatterns = patterns('',
-                       url(r'^attackid=(?P<npcid>\d+)$', views.Attack.as_view(), name='attack'),
+                       url(r'^battle/(?P<pk>\d+)/attack/(?P<targetpk>\d+)$', views.Attack.as_view(), name='attack'),
                        )

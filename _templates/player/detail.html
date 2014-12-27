@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
-{% block pagetitle %}View Character{% endblock pagetitle %}
+{% block pagetitle %}{{ object }}{% endblock pagetitle %}
 
 {% block content %}
-    {{ object }}<br>
-    {{ object.where }}<br>
-    {{ object.where.notes }}
+    <a href="{% url 'index' %}">back</a><br>
+    {{ object }} [<a href="{% url 'player:update' pk=object.id %}">edit</a>]<br>
+    {{ object.notes }}<br>
 {% endblock content %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block pagetitle %} {{ object }} {% endblock pagetitle %}
+
+{% block content %}
+
+<form action="" method="post">
+    {% for field in form %}
+        {{ field.label }}
+        {{ field.label_tag }}: {{ field }}
+        {{ field.html_name }}
+        {{ field.help_text }}
+        {{ field.errors }}<br>
+    {% endfor %}
+    {{ field.non_field_errors }}
+{% csrf_token %}<input type="submit" class="btn btn-sm btn-info" value="Save" /><a class="btn btn-sm btn-default" href="{{ object.get_absolute_url }}">Cancel</a>
+</form>
+{% endblock content %}

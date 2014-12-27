@@ -4,7 +4,7 @@ player/views.py
 from django.views import generic
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404
 
 from djge import mixin
@@ -61,19 +61,19 @@ class Detail(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
     template_name = 'player/detail.html'
 
 
-class Update(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
+class Update(mixin.RequireUser, mixin.RequireOwner, generic.UpdateView):
     form_class = forms.UpdateCharacter
     model = PlayerCharacter
-    template_name = 'player/detail.html'
+    template_name = 'player/update.html'
 
 
 class Select(mixin.RequireUser, generic.RedirectView):
     permanent = False
     query_string = False
+    url = reverse_lazy('index')
 
     def get_redirect_url(self, *args, **kwargs):
         current = get_object_or_404(Config, name=self.request.user)
         current.playing_toon = get_object_or_404(PlayerCharacter, user=self.request.user, pk=self.kwargs.get('pk'))
         current.save()
-        self.url = reverse('index')
         return super(Select, self).get_redirect_url(*args, **kwargs)

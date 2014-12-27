@@ -1,14 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>{{ location }}</h1>
-<p>{{ location.notes }}</p>
-<br>
-<p>You can go to:</p>
-<ul>
-    {% for this in location.link.all %}
-        <li><a href="{% url 'player:move' to=this.id %}">{{ this }}</a></li>
-    {% empty %}
-        DeadEnd
+    {% for this in character.where.link.all %}
+        <a href="{% url 'player:move' to=this.id %}">Go to {{ this }}</a><br>
     {% endfor %}
-</ul>
 {% endblock content %}
