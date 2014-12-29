@@ -12,3 +12,4 @@ class Battle(UltraModel):
     name = models.ForeignKey(PlayerCharacter, unique=True)
     user = models.ForeignKey(User)
     npcs = models.ManyToManyField(NonPlayerCharacter)
+    # log =

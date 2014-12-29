@@ -4,9 +4,8 @@
 
 {% block content %}
     In combat<br>
-    {% for this in fight %}
-        {% for enemy in this.npcs.all %}
-            {{ enemy }}, HP:{{ enemy.life }}<a href="{% url 'encounter:attack' pk=this.id targetpk=enemy.id %}"> Attack!</a><br>
-        {% endfor %}
+    <a href="{% url 'encounter:healself' pk=fight.id %}">Heal Self</a><br>
+    {% for enemy in fight.npcs.all %}
+        {{ enemy }}, HP:{{ enemy.life }}<a href="{% url 'encounter:attack' pk=fight.id targetpk=enemy.id %}"> Attack!</a><br>
     {% endfor %}
 {% endblock content %}

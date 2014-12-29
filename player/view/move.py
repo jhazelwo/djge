@@ -29,9 +29,9 @@ class Do(mixin.RequireUser, generic.RedirectView):
             if destination in character_is.where.link.all():
                 character_is.where = destination
                 character_is.save()
-                if character_is.where.category.random_battles is True: # and random.randint(0, 32) <= 8:
+                if character_is.where.category.random_battles is True:  # and random.randint(0, 32) <= 8:
                     newfight, created = Battle.objects.get_or_create(name=character_is, user=self.request.user)
                     if created:
-                        newfight.npcs.add(NonPlayerCharacter.objects.create(name='Enemy1'))
-                        newfight.npcs.add(NonPlayerCharacter.objects.create(name='Enemy2'))
+                        newfight.npcs.add(NonPlayerCharacter.objects.create(name='Giant Rock Monster', life=2000))
+                        newfight.npcs.add(NonPlayerCharacter.objects.create(name='GimP', life=100))
         return super(Do, self).get_redirect_url(*args, **kwargs)
