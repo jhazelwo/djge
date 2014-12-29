@@ -19,7 +19,7 @@ class Do(mixin.RequireUser, generic.TemplateView):
         context = self.get_context_data(**kwargs)
         self.template_name = 'player/move.html'
         #
-        user_is = self.request.user.config_set.get()
+        user_is, created = Config.objects.get_or_create(name=self.request.user)
         if not user_is.playing_toon:
             return redirect(reverse('player:index'))
         character_is = user_is.playing_toon

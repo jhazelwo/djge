@@ -10,22 +10,3 @@
     </table>
 </form>
 {% endblock content %}
-
-
-
-
-{% comment %}
-{% for field in form %}
-{{ field.label_tag }}: {{ field }}
-{{ field.errors }}
-{% endfor %}
-{{ field.non_field_errors }}
-
-Additional rendering properties:
-
-    field.label
-    field.label_tag
-    field.html_name
-    field.help_text
-
-{% endcomment %}

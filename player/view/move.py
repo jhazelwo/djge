@@ -24,6 +24,7 @@ class Do(mixin.RequireUser, generic.RedirectView):
         destination = get_object_or_404(Location, id=kwargs.get('to'))
         user_is = Config.objects.get(name=self.request.user)
         character_is = PlayerCharacter.objects.get(id=user_is.playing_toon.id)
+        character_is.funkup(5)
         #
         if Battle.objects.filter(name=character_is).count() == 0:
             if destination in character_is.where.link.all():

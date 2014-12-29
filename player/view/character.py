@@ -46,10 +46,10 @@ class Create(mixin.RequireUser, generic.CreateView):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
         self.object.level = 1
-        self.object.life = self.object.life_max = self.object.species.starting_hp
-        self.object.mana = self.object.mana_max = self.object.species.starting_mp
+        self.object.life = self.object.life_max = self.object.category.starting_hp
+        self.object.mana = self.object.mana_max = self.object.category.starting_mp
         try:
-            self.object.where = self.object.species.starting_zone
+            self.object.where = self.object.category.starting_zone
         except ValueError:
             self.object.where = get_object_or_404(Location, id=1)
         self.success_url = reverse('player:index')
@@ -59,6 +59,21 @@ class Create(mixin.RequireUser, generic.CreateView):
 class Detail(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
     model = PlayerCharacter
     template_name = 'player/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Detail, self).get_context_data(**kwargs)
+        me = context['object']
+        context['nonenone'] = 0
+        context['xtradodg'] = 0
+        context['dbledamg'] = 0
+        context['funkregn'] = 0
+        context['magiheal'] = 0
+        context['hitsteal'] = 0
+        context['dbleatta'] = 0
+        context['dbleheal'] = 0
+        for this in [me.c01, me.c02, me.c03, me.c04, me.c05, me.c06, me.c07, me.c08]:
+            context[this] += 10
+        return context
 
 
 class Update(mixin.RequireUser, mixin.RequireOwner, generic.UpdateView):

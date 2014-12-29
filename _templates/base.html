@@ -36,7 +36,8 @@
         {% endif %}
             {% if character %}
                 <a href="{% url 'player:detail' pk=character.id %}">{{ character }}</a>,
-                HP={{ character.life }}
+                HP={{ character.life }},
+                Funk={{ character.funk }}
                 @
                 {{ character.where }};
                 {{ character.where.notes }}<br><br>

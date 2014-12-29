@@ -1,6 +1,8 @@
 """
 mobile/models.py
 """
+import random
+
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
@@ -12,17 +14,12 @@ from world.models import Location
 from inventory.models import Item
 
 
-class Species(UltraModel):
+class Category(UltraModel):
     name = models.CharField(max_length=64)
     playable = models.BooleanField(default=False)
-    starting_zone = models.ForeignKey(Location, null=True, blank=True)
+    starting_zone = models.ForeignKey(Location, null=True, blank=True, related_name='basemobiletype')
     starting_hp = models.PositiveSmallIntegerField(default=1)
     starting_mp = models.PositiveSmallIntegerField(default=1)  # Values from 0 to 32767
-
-
-class Gender(UltraModel):
-    name = models.CharField(max_length=64)
-    playable = models.BooleanField(default=False)
 
 
 class BaseMobile(UltraModel):
@@ -35,12 +32,55 @@ class BaseMobile(UltraModel):
     mana = models.IntegerField(default=1)
     mana_max = models.IntegerField(default=1)
     #
-    species = models.ForeignKey('Species', null=True)
-    gender = models.ForeignKey('Gender', null=True)
+    category = models.ForeignKey('Category', null=True)
     #
     base_offense = models.IntegerField(default=1)
     #
     base_defense = models.IntegerField(default=1)
+    #
+    funk = models.IntegerField(default=100)
+    CHOICES = (
+        ('nonenone', ''),
+        ('xtradodg', ''),
+        ('dbledamg', ''),
+        ('funkregn', ''),
+        ('magiheal', ''),
+        ('hitsteal', ''),
+        ('dbleatta', ''),
+        ('dbleheal', ''),
+    )
+    c01 = models.CharField(max_length=8, choices=CHOICES, default=CHOICES[0][0])
+    c02 = models.CharField(max_length=8, choices=CHOICES, default=CHOICES[0][0])
+    c03 = models.CharField(max_length=8, choices=CHOICES, default=CHOICES[0][0])
+    c04 = models.CharField(max_length=8, choices=CHOICES, default=CHOICES[0][0])
+    c05 = models.CharField(max_length=8, choices=CHOICES, default=CHOICES[0][0])
+    c06 = models.CharField(max_length=8, choices=CHOICES, default=CHOICES[0][0])
+    c07 = models.CharField(max_length=8, choices=CHOICES, default=CHOICES[0][0])
+    c08 = models.CharField(max_length=8, choices=CHOICES, default=CHOICES[0][0])
+
+    def funkup(self, amount=2):
+        self.funk += amount
+        if self.funk > 100:
+            self.funk = 100
+        self.save()
+
+    def autoact(self, check):
+        if self.funk < 10:
+            return False
+        chance = 0
+        for this in [self.c01, self.c02, self.c03, self.c04, self.c05, self.c06, self.c07, self.c08]:
+            if this == check:
+                chance += 1
+        if chance > 0:
+            i = random.randint(1, 10)
+            if i <= chance:
+                self.funk -= 10
+                if self.funk < 0:
+                    self.funk = 0
+                self.save()
+                print('Funk {0} succceeded with roll of {1} being lower than {2}'.format(check, i, chance))
+                return True
+        return False
 
     class Meta:
         abstract = True

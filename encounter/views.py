@@ -13,7 +13,7 @@ from world.models import Location
 from mobile.models import PlayerCharacter, NonPlayerCharacter
 from player.models import Config
 from encounter.models import Battle
-from encounter import battlestack
+from encounter.funcs import attack, heal_self
 
 
 class Attack(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
@@ -29,7 +29,7 @@ class Attack(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
         if target not in the_fight.npcs.all():
             raise Http404
         #
-        damage_done = battlestack.attack(self, character_is, target)
+        damage_done = attack(self, character_is, target)
         if damage_done:
             messages.success(self.request, 'Did {0} damage to {1}'.format(damage_done, target))
         else:
@@ -38,13 +38,19 @@ class Attack(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
             messages.success(self.request, '{0} defeated'.format(target))
             target.delete()
         for this_npc in the_fight.npcs.all():
-            damage_recv = battlestack.attack(self, this_npc, character_is)
+            damage_recv = attack(self, this_npc, character_is)
             if damage_recv is not False:
                 messages.error(self.request,
                                'Took {0} damage from {1}'.format(damage_recv, this_npc),
                                extra_tags='danger')
             else:
                 messages.warning(self.request, '{0} missed!'.format(this_npc))
+        for this_npc in the_fight.npcs.all():
+            this_npc.funkup()
+        if character_is.autoact('funkregn'):
+            character_is.funkup(10 + 10)  # cost + bonus
+        else:
+            character_is.funkup()
         return redirect(reverse('index'))
 
 
@@ -56,14 +62,17 @@ class HealSelf(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
         character_is = user_is.playing_toon
         the_fight = character_is.in_combat()
         #
-        res = battlestack.heal_self(character_is)
+        res = heal_self(character_is)
         messages.success(self.request, 'Restored {0} life.'.format(res))
         for this_npc in the_fight.npcs.all():
-            damage_recv = battlestack.attack(self, this_npc, character_is)
+            damage_recv = attack(self, this_npc, character_is)
             if damage_recv is not False:
                 messages.error(self.request,
                                'Took {0} damage from {1}'.format(damage_recv, this_npc),
                                extra_tags='danger')
             else:
                 messages.warning(self.request, '{0} missed!'.format(this_npc))
+        character_is.funkup()
+        for this_npc in the_fight.npcs.all():
+            this_npc.funkup()
         return redirect(reverse('index'))

@@ -18,3 +18,9 @@ class Config(UltraModel):
         ('120', 'CompleteCookie'),
     )
     fov = models.CharField(max_length=3, choices=CHOICE, default=CHOICE[1][0])
+    CHOICES = (
+        ('29', 'TV'),
+        ('30', 'Console'),
+        ('60', 'PC'),
+    )
+    fps = models.CharField(max_length=3, choices=CHOICES, default=CHOICES[0][0])

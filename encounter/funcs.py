@@ -2,7 +2,6 @@
 
 """
 import random
-from . import autoact
 
 
 def attack(self, attacker, target):
