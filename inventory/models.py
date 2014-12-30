@@ -13,10 +13,6 @@ class Category(UltraModel):
 
 class Container(UltraModel):
     size = models.SmallIntegerField(default=16)
-    user = models.ForeignKey(User, related_name='storage')
-    # pc = models.ForeignKey(PlayerCharacter, related_name='storage')
-    # guild = models.ForeignKey(Guild, related_name='storage')
-    # faction = models.ForeignKey(Faction, related_name='storage')
     category = models.ForeignKey('Category', blank=True, null=True)
 
 

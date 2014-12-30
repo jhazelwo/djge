@@ -7,11 +7,13 @@ from django.contrib.auth.models import User
 from djge.models import UltraModel
 
 from mobile.models import PlayerCharacter
+from inventory.models import Container
 
 
 class Config(UltraModel):
     name = models.ForeignKey(User, unique=True)
     playing_toon = models.ForeignKey(PlayerCharacter, null=True, blank=True)
+    storage = models.ForeignKey(Container, null=True, blank=True)
     CHOICE = (
         ('29',  'Unplayable'),
         ('90',  'Normal'),

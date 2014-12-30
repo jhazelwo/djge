@@ -21,18 +21,19 @@ class Do(mixin.RequireUser, generic.RedirectView):
     url = reverse_lazy('index')
 
     def get_redirect_url(self, *args, **kwargs):
-        destination = get_object_or_404(Location, id=kwargs.get('to'))
-        user_is = Config.objects.get(name=self.request.user)
-        character_is = PlayerCharacter.objects.get(id=user_is.playing_toon.id)
-        character_is.funkup(5)
+        destination = get_object_or_404(Location, id=kwargs.get('id'))
+        user_is = self.request.user.config_set.get()
+        character = user_is.playing_toon
         #
-        if Battle.objects.filter(name=character_is).count() == 0:
-            if destination in character_is.where.link.all():
-                character_is.where = destination
-                character_is.save()
-                if character_is.where.category.random_battles is True:  # and random.randint(0, 32) <= 8:
-                    newfight, created = Battle.objects.get_or_create(name=character_is, user=self.request.user)
-                    if created:
-                        newfight.npcs.add(NonPlayerCharacter.objects.create(name='Giant Rock Monster', life=2000))
-                        newfight.npcs.add(NonPlayerCharacter.objects.create(name='GimP', life=100))
+        if character.relocate(destination) is True:
+            character.funkup()
+            character.funkup()
+            character.lifeup()
+            #
+            if character.where.category.random_battles is True:  # and random.randint(0, 32) <= 8:
+                newfight, created = Battle.objects.get_or_create(name=character, user=self.request.user)
+                if created:
+                    newfight.npcs.add(NonPlayerCharacter.objects.create(name='Giant Rock Monster', life=2000))
+                    newfight.npcs.add(NonPlayerCharacter.objects.create(name='GimP', life=100))
+            #
         return super(Do, self).get_redirect_url(*args, **kwargs)

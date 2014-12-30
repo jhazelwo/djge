@@ -88,7 +88,7 @@ class Select(mixin.RequireUser, generic.RedirectView):
     url = reverse_lazy('index')
 
     def get_redirect_url(self, *args, **kwargs):
-        current = get_object_or_404(Config, name=self.request.user)
-        current.playing_toon = get_object_or_404(PlayerCharacter, user=self.request.user, pk=self.kwargs.get('pk'))
-        current.save()
+        user_is, created = Config.objects.get_or_create(name=self.request.user)
+        user_is.playing_toon = get_object_or_404(PlayerCharacter, user=self.request.user, pk=self.kwargs.get('pk'))
+        user_is.save()
         return super(Select, self).get_redirect_url(*args, **kwargs)

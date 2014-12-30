@@ -10,7 +10,7 @@ from player.view import character
 
 urlpatterns = patterns('',
                        url(r'^logout/$', LogOut.as_view(), name='logout'),
-                       url(r'^movemeto=(?P<to>\d+)$', Move.as_view(), name='move'),
+                       url(r'^relocate/(?P<id>\d+)$', Move.as_view(), name='move'),
                        #
                        #
                        url(r'^create-character/$', character.Create.as_view(), name='create'),

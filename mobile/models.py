@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from djge.models import UltraModel
 
 from world.models import Location
-from inventory.models import Item
+from inventory.models import Item, Container
 
 
 class Category(UltraModel):
@@ -64,6 +64,14 @@ class BaseMobile(UltraModel):
             self.funk = 100
         self.save()
 
+    def lifeup(self, percent=1):
+        total = int(self.life_max)
+        heal = int(total * (percent / 100.0)) + 1
+        self.life += heal
+        if self.life > total:
+            self.life = total
+        self.save()
+
     def autoact(self, check):
         if self.funk < 10:
             return False
@@ -91,12 +99,22 @@ class PlayerCharacter(BaseMobile):
     where = models.ForeignKey(Location)
     equip_offense = models.ForeignKey(Item, null=True, blank=True, related_name='pceqoff')
     equip_defense = models.ForeignKey(Item, null=True, blank=True, related_name='pceqdef')
+    storage = models.ForeignKey(Container, null=True, blank=True)
 
     class Meta:
         unique_together = (('name', 'user'),)
 
     def get_absolute_url(self):
         return reverse('player:detail', kwargs={'pk': self.pk})
+
+    def relocate(self, destination):
+        if self.in_combat():
+            return False
+        if destination not in self.where.link.all():
+            return False
+        self.where = destination
+        self.save()
+        return True
 
     def in_combat(self):
         try:
