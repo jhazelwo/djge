@@ -9,8 +9,9 @@ from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import get_object_or_404
 
 from djge import mixin
-from world.models import Location
+from world.models import Location, Category
 from mobile.models import PlayerCharacter, NonPlayerCharacter
+from mobile.models import Category as NonPlayerCharacterCategory
 from player.models import Config
 from encounter.models import Battle
 
@@ -22,15 +23,17 @@ class Do(mixin.RequireUser, generic.RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         destination = get_object_or_404(Location, id=kwargs.get('id'))
-        user_is = self.request.user.config_set.get()
-        character = user_is.playing_toon
+        character = self.request.user.config_set.get().playing_toon
         #
         if character.relocate(destination) is True:
             character.funkup()
             character.funkup()
             character.lifeup()
             #
-            if character.where.category.random_battles is True:  # and random.randint(0, 32) <= 8:
+            # local_npcs = NonPlayerCharacter.objects.filter(
+            #     category=NonPlayerCharacterCategory.objects.filter(spawn=destination))
+            #
+            if character.where.category.random_battles is True and random.randint(0, 32) >= 80000:
                 newfight, created = Battle.objects.get_or_create(name=character, user=self.request.user)
                 if created:
                     newfight.npcs.add(NonPlayerCharacter.objects.create(name='Giant Rock Monster', life=2000))

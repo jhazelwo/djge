@@ -17,9 +17,10 @@ from inventory.models import Item, Container
 class Category(UltraModel):
     name = models.CharField(max_length=64)
     playable = models.BooleanField(default=False)
-    starting_zone = models.ForeignKey(Location, null=True, blank=True, related_name='basemobiletype')
-    starting_hp = models.PositiveSmallIntegerField(default=1)
-    starting_mp = models.PositiveSmallIntegerField(default=1)  # Values from 0 to 32767
+    spawn = models.ForeignKey(Location, null=True, blank=True, related_name='basemobiletype')
+    # spawn_size = models.IntegerField(default=1)
+    life_max = models.PositiveSmallIntegerField(default=1)  # Values from 0 to 32767
+    # energy_max = models.IntegerField(default=0)
 
 
 class BaseMobile(UltraModel):
@@ -28,9 +29,6 @@ class BaseMobile(UltraModel):
     #
     life = models.IntegerField(default=1)
     life_max = models.IntegerField(default=1)
-    #
-    mana = models.IntegerField(default=1)
-    mana_max = models.IntegerField(default=1)
     #
     category = models.ForeignKey('Category', null=True)
     #
@@ -105,7 +103,7 @@ class PlayerCharacter(BaseMobile):
         unique_together = (('name', 'user'),)
 
     def get_absolute_url(self):
-        return reverse('player:detail', kwargs={'pk': self.pk})
+        return reverse('player:character:detail', kwargs={'pk': self.pk})
 
     def relocate(self, destination):
         if self.in_combat():
@@ -128,7 +126,6 @@ class PlayerCharacter(BaseMobile):
 
 
 class NonPlayerCharacter(BaseMobile):
-    spawns = models.ManyToManyField(Location, null=True, blank=True)
     CHOICE = (
         ('10',  'Friendly'),
         ('20',  'Neutral'),
@@ -136,3 +133,7 @@ class NonPlayerCharacter(BaseMobile):
         ('40',  'Invulnerable'),
     )
     attitude = models.CharField(max_length=2, choices=CHOICE, default=CHOICE[0][0])
+    # xp = ...
+    # $$ = ...
+    # parts = ...
+    # spawn_chance = ...

@@ -7,16 +7,18 @@ import random
 def attack(self, attacker, target):
     if target.autoact('xtradodg'):
         return False
-    base_damage = attacker.base_offense
+    #
     try:
         equipped_damage = attacker.equip_offense.base.power
-    except:
+    except AttributeError:
         equipped_damage = 0
-    total_damage = base_damage + equipped_damage
+    #
+    total_damage = attacker.base_offense + equipped_damage
     if attacker.autoact('dbledamg'):
         total_damage *= 2
     target.life -= total_damage
     target.save()
+    #
     return total_damage
 
 

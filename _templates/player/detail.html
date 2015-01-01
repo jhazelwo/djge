@@ -3,39 +3,40 @@
 {% block pagetitle %}{{ object }}{% endblock pagetitle %}
 
 {% block content %}
-    <a href="{% url 'index' %}">back</a><br>
-    {{ object }} [<a href="{% url 'player:update' pk=object.id %}">edit</a>] |
-    Life={{ object.life }}/{{ object.life_max }} |
-    Funk={{ object.funk }}/100 |
-    {{ object.notes }}
-    <table class="table table-hover table-striped">
-        <tr>
-            <td>{{ xtradodg }}%</td>
-            <td>Dodge if opponent would hit.</td>
-        </tr>
-        <tr>
-            <td>{{ dbledamg }}%</td>
-            <td>Double damage if you hit.</td>
-        </tr>
-        <tr>
-            <td>{{ funkregn }}%</td>
-            <td>Extra Funk regen; checked during funk regen after you finish an attack</td>
-        </tr>
-        <tr>
-            <td>{{ magiheal }}%</td>
-            <td>Heal self after opponent attack.</td>
-        </tr>
-        <tr>
-            <td>{{ hitsteal }}%</td>
-            <td>Steal money/items from opponent during a successful attack.</td>
-        </tr>
-        <tr>
-            <td>{{ dbleatta }}%</td>
-            <td>Add another hit during successful attack, damage cannot be doubled</td>
-        </tr>
-        <tr>
-            <td>{{ dbleheal }}%</td>
-            <td>Chance to boost healing during heal-self or auto-heal.</td>
-        </tr>
-    </table>
+<a href="{% url 'index' %}">back</a><br>
+{{ object }} [<a href="{% url 'player:character:update' pk=object.id %}">edit</a>] |
+Life={{ object.life }}/{{ object.life_max }} |
+Funk={{ object.funk }}/100 |
+{{ object.notes }}
+<hr>
+<table>
+    <tr>
+        <td>{{ xtradodg }}%</td>
+        <td>Dodge if opponent would hit.</td>
+    </tr>
+    <tr>
+        <td>{{ dbledamg }}%</td>
+        <td>Double damage if you hit.</td>
+    </tr>
+    <tr>
+        <td>{{ funkregn }}%</td>
+        <td>Extra Funk regen; checked during funk regen after you finish an attack</td>
+    </tr>
+    <tr>
+        <td>{{ magiheal }}%</td>
+        <td>Heal self after opponent attack.</td>
+    </tr>
+    <tr>
+        <td>{{ hitsteal }}%</td>
+        <td>Steal money/items from opponent during a successful attack.</td>
+    </tr>
+    <tr>
+        <td>{{ dbleatta }}%</td>
+        <td>Add another hit during successful attack, damage cannot be doubled</td>
+    </tr>
+    <tr>
+        <td>{{ dbleheal }}%</td>
+        <td>Chance to boost healing during heal-self or auto-heal.</td>
+    </tr>
+</table>
 {% endblock content %}

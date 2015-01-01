@@ -9,9 +9,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
 from djge import mixin
-from world.models import Location
-from mobile.models import PlayerCharacter, NonPlayerCharacter
-from player.models import Config
+from mobile.models import NonPlayerCharacter
 from encounter.models import Battle
 from encounter.funcs import attack, heal_self
 
@@ -21,36 +19,36 @@ class Attack(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         target = get_object_or_404(NonPlayerCharacter, id=kwargs.get('targetpk'))
-        user_is = get_object_or_404(Config, name=self.request.user)
-        #
-        character_is = user_is.playing_toon
-        the_fight = character_is.in_combat()
+        character = self.request.user.config_set.get().playing_toon
+        the_fight = character.in_combat()
         #
         if target not in the_fight.npcs.all():
             raise Http404
         #
-        damage_done = attack(self, character_is, target)
+        damage_done = attack(self, character, target)
         if damage_done:
             messages.success(self.request, 'Did {0} damage to {1}'.format(damage_done, target))
         else:
-            messages.warning(self.request, 'Missed {0}!'.format(target))
+            messages.warning(self.request, '{0} evaded attack!'.format(target))
         if target.life <= 0:
             messages.success(self.request, '{0} defeated'.format(target))
             target.delete()
+        #
         for this_npc in the_fight.npcs.all():
-            damage_recv = attack(self, this_npc, character_is)
+            damage_recv = attack(self, this_npc, character)
             if damage_recv is not False:
                 messages.error(self.request,
                                'Took {0} damage from {1}'.format(damage_recv, this_npc),
                                extra_tags='danger')
             else:
-                messages.warning(self.request, '{0} missed!'.format(this_npc))
-        for this_npc in the_fight.npcs.all():
+                messages.success(self.request, '{0} evaded attack!'.format(character))
             this_npc.funkup()
-        if character_is.autoact('funkregn'):
-            character_is.funkup(10 + 10)  # cost + bonus
+        #
+        if character.autoact('funkregn'):
+            character.funkup(10 + 10)  # initial funk cost + bonus
         else:
-            character_is.funkup()
+            character.funkup()
+        #
         return redirect(reverse('index'))
 
 
@@ -58,21 +56,21 @@ class HealSelf(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
     model = Battle
 
     def get(self, request, *args, **kwargs):
-        user_is = get_object_or_404(Config, name=self.request.user)
-        character_is = user_is.playing_toon
-        the_fight = character_is.in_combat()
+        account = self.request.user.config_set.get()
+        character = account.playing_toon
+        the_fight = character.in_combat()
         #
-        res = heal_self(character_is)
+        res = heal_self(character)
         messages.success(self.request, 'Restored {0} life.'.format(res))
         for this_npc in the_fight.npcs.all():
-            damage_recv = attack(self, this_npc, character_is)
+            damage_recv = attack(self, this_npc, character)
             if damage_recv is not False:
                 messages.error(self.request,
                                'Took {0} damage from {1}'.format(damage_recv, this_npc),
                                extra_tags='danger')
             else:
                 messages.warning(self.request, '{0} missed!'.format(this_npc))
-        character_is.funkup()
+        character.funkup()
         for this_npc in the_fight.npcs.all():
             this_npc.funkup()
         return redirect(reverse('index'))

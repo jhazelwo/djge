@@ -23,7 +23,7 @@ class Index(mixin.RequireUser, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
         context['object_list'] = PlayerCharacter.objects.filter(user=self.request.user).order_by('created')
-        context['cfg'] = get_object_or_404(Config, name=self.request.user)
+        context['cfg'], created = Config.objects.get_or_create(name=self.request.user)
         context['max_toons'] = MAX_TOONS
         return context
 
@@ -46,10 +46,9 @@ class Create(mixin.RequireUser, generic.CreateView):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
         self.object.level = 1
-        self.object.life = self.object.life_max = self.object.category.starting_hp
-        self.object.mana = self.object.mana_max = self.object.category.starting_mp
+        self.object.life = self.object.category.life_max
         try:
-            self.object.where = self.object.category.starting_zone
+            self.object.where = self.object.category.spawn
         except ValueError:
             self.object.where = get_object_or_404(Location, id=1)
         self.success_url = reverse('player:index')
@@ -88,7 +87,7 @@ class Select(mixin.RequireUser, generic.RedirectView):
     url = reverse_lazy('index')
 
     def get_redirect_url(self, *args, **kwargs):
-        user_is, created = Config.objects.get_or_create(name=self.request.user)
-        user_is.playing_toon = get_object_or_404(PlayerCharacter, user=self.request.user, pk=self.kwargs.get('pk'))
-        user_is.save()
+        account, created = Config.objects.get_or_create(name=self.request.user)
+        account.playing_toon = get_object_or_404(PlayerCharacter, user=self.request.user, pk=self.kwargs.get('pk'))
+        account.save()
         return super(Select, self).get_redirect_url(*args, **kwargs)

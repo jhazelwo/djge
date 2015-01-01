@@ -15,11 +15,10 @@ from world.models import Location
 from world.models import Category as LocationCatagory
 from mobile.models import PlayerCharacter
 from mobile.models import Category as MobileCategory
-from inventory.models import Category as InventoryCategory
 from player.models import Config
 
 
-class InstallView(mixin.RequireUser,generic.TemplateView):
+class InstallView(mixin.RequireUser, generic.TemplateView):
     template_name = 'install.html'
 
     def get(self, request, *args, **kwargs):
@@ -49,12 +48,6 @@ class InstallView(mixin.RequireUser,generic.TemplateView):
             this = MobileCategory.objects.get(id=1)
         except ObjectDoesNotExist:
             this = MobileCategory.objects.create(name='category')
-            messages.success(self.request, 'Made {0}'.format(this))
-        #
-        try:
-            this = InventoryCategory.objects.get(id=1)
-        except ObjectDoesNotExist:
-            this = InventoryCategory.objects.create(name='category')
             messages.success(self.request, 'Made {0}'.format(this))
         #
         for this in User.objects.all():

@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
-{% block pagetitle %} {{ object }} {% endblock pagetitle %}
+{% block pagetitle %} update\{{ object }} {% endblock pagetitle %}
 
 {% block content %}{{ form.errors }}
 <form action="" method="post">
 {{ form.name }} {{ object.category }}<br>
 {{ form.notes }}
-<table class="table table-hover table-striped">
+<hr>
+    <table border="1">
     <tr>
         <td>10%</td>
         <td>10%</td>
@@ -107,6 +108,7 @@
         <td>Chance to boost healing during heal-self or auto-heal.</td>
     </tr>
 </table>
-{% csrf_token %}<input type="submit" class="btn btn-sm btn-info" value="Save" /><a class="btn btn-sm btn-default" href="{{ object.get_absolute_url }}">Cancel</a>
+<hr>
+    {% csrf_token %}<input type="submit" class="btn btn-sm btn-info" value="Save" /><a class="btn btn-sm btn-default" href="{{ object.get_absolute_url }}">Cancel</a>
 </form>
 {% endblock content %}

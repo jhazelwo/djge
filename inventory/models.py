@@ -7,13 +7,9 @@ from django.contrib.auth.models import User
 from djge.models import UltraModel
 
 
-class Category(UltraModel):
-    name = models.CharField(max_length=8, unique=True)
-
-
 class Container(UltraModel):
     size = models.SmallIntegerField(default=16)
-    category = models.ForeignKey('Category', blank=True, null=True)
+    contents = models.ManyToManyField('Item', null=True, blank=True)
 
 
 class Attribute(UltraModel):
@@ -52,5 +48,4 @@ class Item(UltraModel):
     name = models.CharField(max_length=64, default='DEFAULT')
     base = models.ForeignKey('BaseItem')
     enchant = models.ManyToManyField('Enchant', null=True, blank=True)
-    stored = models.ForeignKey('Container', null=True, blank=True)
     durability = models.SmallIntegerField(default=100)
