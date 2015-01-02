@@ -9,8 +9,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
 from djge import mixin
-from mobile.models import NonPlayerCharacter
-from encounter.models import Battle
+# from mobile.models import NonPlayerCharacter
+from encounter.models import Battle, Combatant
 from encounter.funcs import attack, heal_self
 
 
@@ -18,7 +18,7 @@ class Attack(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
     model = Battle
 
     def get(self, request, *args, **kwargs):
-        target = get_object_or_404(NonPlayerCharacter, id=kwargs.get('targetpk'))
+        target = get_object_or_404(Combatant, id=kwargs.get('targetpk'))
         character = self.request.user.config_set.get().playing_toon
         the_fight = character.in_combat()
         #

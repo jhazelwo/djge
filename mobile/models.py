@@ -5,6 +5,7 @@ import random
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 
@@ -18,7 +19,6 @@ class Category(UltraModel):
     name = models.CharField(max_length=64)
     playable = models.BooleanField(default=False)
     spawn = models.ForeignKey(Location, null=True, blank=True, related_name='basemobiletype')
-    # spawn_size = models.IntegerField(default=1)
     life_max = models.PositiveSmallIntegerField(default=1)  # Values from 0 to 32767
     # energy_max = models.IntegerField(default=0)
 
@@ -133,7 +133,14 @@ class NonPlayerCharacter(BaseMobile):
         ('40',  'Invulnerable'),
     )
     attitude = models.CharField(max_length=2, choices=CHOICE, default=CHOICE[0][0])
+    spawn_chance = models.IntegerField(default=100,
+                                       validators=[
+                                           MinValueValidator(1),
+                                           MaxValueValidator(100)
+                                       ])
+    spawn_count = models.IntegerField(default=1)
     # xp = ...
     # $$ = ...
     # parts = ...
     # spawn_chance = ...
+    # spawn_count = ...
