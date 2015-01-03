@@ -53,3 +53,6 @@ textarea, input {
   color: black;
   font-family: monospace;
 }
+ul.quiet {
+    list-style-type: none;
+}

@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% for this in character.where.link.all %}
-        <a href="{% url 'world:move' id=this.id %}">Go to {{ this }}</a><br>
-    {% endfor %}
+    <h4>go to:</h4>
+    <ul class="quiet">
+        {% for this in character.where.link.all %}
+            <li><a href="{% url 'world:move' id=this.id %}">{{ this }}</a></li>
+        {% endfor %}
+    </ul>
 {% endblock content %}

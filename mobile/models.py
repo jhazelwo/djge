@@ -1,5 +1,18 @@
 """
 mobile/models.py
+
+Category:
+    A type of Mobile
+
+BaseMobile:
+    Inherited by PlayerCharacter and NonPlayerCharacter
+
+PlayerCharacter:
+    A character (mobile) controlled/owned by a person
+
+NonPlayerCharacter:
+    Template objects for mobiles controlled by the program during encounters
+
 """
 import random
 
@@ -10,12 +23,17 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 
 from djge.models import UltraModel
-
 from world.models import Location
 from inventory.models import Item, Container
 
 
 class Category(UltraModel):
+    """
+    A species/race/type of Mobile. Things like Dragon, Elf, Stationwagon, Fighter Jet, etc...
+
+    If playable then 'spawn' will be where new PlayerCharacters will be placed on creation.
+    else spawn is the world.Location where the NPC will spawn during /encounter/s.
+    """
     name = models.CharField(max_length=64)
     playable = models.BooleanField(default=False)
     spawn = models.ForeignKey(Location, null=True, blank=True, related_name='basemobiletype')
@@ -24,6 +42,12 @@ class Category(UltraModel):
 
 
 class BaseMobile(UltraModel):
+    """
+    PC and NPC classes inherit this.
+    Put all attirbutes common to mobiles here except
+        category-specific traits such as spawn
+        location and starting life.
+    """
     name = models.CharField(max_length=64)
     level = models.IntegerField(default=1)
     #
@@ -93,6 +117,9 @@ class BaseMobile(UltraModel):
 
 
 class PlayerCharacter(BaseMobile):
+    """
+    A mobile controlled by a player (real person)
+    """
     user = models.ForeignKey(User)
     where = models.ForeignKey(Location)
     equip_offense = models.ForeignKey(Item, null=True, blank=True, related_name='pceqoff')
@@ -124,8 +151,28 @@ class PlayerCharacter(BaseMobile):
             return False
         return this
 
+    def on_death(self):
+        """
+        When player dies
+            delete Battle and
+            set location to mobile.category.spawn
+            (or whatever custom action is needed
+        """
+        # self.where = self.category.spawn
+        # self.life = self.max_life
+        # messages.error(self.request, 'ded')
+        # for this in self.battle_set.npcs.all(): this.delete()
+        # self.log.update('{0} died'.format(self))
+        # self.cool -= 9001
+        return True
+
 
 class NonPlayerCharacter(BaseMobile):
+    """
+    Your static/global inventory of NPCs, monsters, vendors, kings, spaceships, whatever.
+
+    Use classes in /encounter/ to instantiate NPC objects here.
+    """
     CHOICE = (
         ('10',  'Friendly'),
         ('20',  'Neutral'),
@@ -144,3 +191,10 @@ class NonPlayerCharacter(BaseMobile):
     # parts = ...
     # spawn_chance = ...
     # spawn_count = ...
+
+    def on_death(self):
+        """
+        Execute this code when this NPC dies.
+        """
+        # self.battle_set.update_log('{0} died'.format(self))
+        return True

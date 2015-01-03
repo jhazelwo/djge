@@ -3,9 +3,11 @@
 {% block pagetitle %}encounter\battle{% endblock pagetitle %}
 
 {% block content %}
-    In combat<br>
-    <a href="{% url 'encounter:healself' pk=fight.id %}">Heal Self</a><br>
+    <h4>In combat</h4>
+<ul class="quiet">
+    <li><a href="{% url 'encounter:healself' pk=fight.id %}">Heal Self</a></li>
     {% for enemy in fight.npcs.all %}
-        {{ enemy }}, HP:{{ enemy.life }}<a href="{% url 'encounter:attack' pk=fight.id targetpk=enemy.id %}"> Attack!</a><br>
+    <li>{{ enemy }}<ul><li>life={{ enemy.life }}, <a href="{% url 'encounter:attack' pk=fight.id targetpk=enemy.id %}"> Attack!</a></li></ul></li>
     {% endfor %}
+</ul>
 {% endblock content %}

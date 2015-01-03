@@ -22,27 +22,39 @@
     </head>
     <body role="document">
         <div class="container theme-showcase" role="main">
-        {% if messages %}
-                {% for message in messages %}
-                    <p {% if message.tags %} class="djge-{{ message.tags }}"{% endif %}>{{ message }}</p>
-                {% endfor %}
-        {% endif %}
         {% if form.non_field_errors %}
-            <div class="blog-header">
                 {% for non_field_error in form.non_field_errors %}
-                    <div class="alert alert-danger">{{ non_field_error }}</div>
+                    <h1 class="alert alert-danger">{{ non_field_error }}</h1>
                 {% endfor %}
-            </div>
         {% endif %}
-            {% if character %}
-                <a href="{% url 'player:detail' pk=character.id %}">{{ character }}</a>,
-                HP={{ character.life }},
-                Funk={{ character.funk }}
-                @
-                {{ character.where }};
-                {{ character.where.notes }}<br><br>
-            {% endif %}
-            {% block content %}{% endblock %}
+            <div class="row"><!-- content-body -->
+                {% if character %}
+                    <div class="col-sm-3">
+                        <h4><a href="{% url 'player:detail' pk=character.id %}">{{ character }}</a></h4>
+                        <ul class="quiet">
+                            <li>life: {{ character.life }}/{{ character.life_max }}</li>
+                            <li>funk: {{ character.funk }}/100</li>
+                            <li>damage: {{ character.base_offense }}</li>
+                            <li><a href="">Inventory (xx/xx)</a></li>
+                            <li>[<a href="">Heal Self</a>]</li>
+                        </ul>
+                        <hr style="width: 80%; border-top: 1px solid #00FF00;">
+                        <h4>@{{ character.where }}</h4>
+                        <p>{{ character.where.notes }}</p>
+                    </div>
+                {% endif %}
+                <div class="col-sm-3">
+                    {% block content %}{% endblock %}
+                </div>
+                <div class="col-sm-6">
+                    {% if messages %}
+                            {% for message in messages %}
+                                <p {% if message.tags %} class="djge-{{ message.tags }}"{% endif %}>{{ message }}</p>
+                            {% endfor %}
+                    {% endif %}
+                    {% block extra %}{% endblock %}
+                </div>
+            </div><!-- /content-body -->
         </div><!-- class="container theme-showcase" role="main" -->
         <script src="{% static 'js/jquery.min.js' %}"></script><!-- Placed at the end of the document so the pages load faster -->        
         <script src="{% static 'js/bootstrap.min.js' %}"></script><!-- Bootstrap core JavaScript -->
