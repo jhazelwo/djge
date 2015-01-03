@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
+    <h4>@{{ character.where }}</h4>
+    <p>{{ character.where.notes }}</p>
     <h4>go to:</h4>
     <ul class="quiet">
         {% for this in character.where.link.all %}

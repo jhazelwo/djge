@@ -40,14 +40,3 @@ class UpdateCharacter(ModelForm):
             'c07': RadioSelect(),
             'c08': RadioSelect(),
         }
-
-    def __init__(self, *args, **kwargs):
-        super(UpdateCharacter, self).__init__(*args, **kwargs)
-        self.fields['c01'].label = "+10%"
-        self.fields['c02'].label = "+10%"
-        self.fields['c03'].label = "+10%"
-        self.fields['c04'].label = "+10%"
-        self.fields['c05'].label = "+10%"
-        self.fields['c06'].label = "+10%"
-        self.fields['c07'].label = "+10%"
-        self.fields['c08'].label = "+10%"

@@ -5,9 +5,9 @@
 {% block content %}
     <h4>In combat</h4>
 <ul class="quiet">
-    <li><a href="{% url 'encounter:healself' pk=fight.id %}">Heal Self</a></li>
-    {% for enemy in fight.npcs.all %}
-    <li>{{ enemy }}<ul><li>life={{ enemy.life }}, <a href="{% url 'encounter:attack' pk=fight.id targetpk=enemy.id %}"> Attack!</a></li></ul></li>
+    <li><a href="{% url 'encounter:healself' pk=character.battle_set.get.id %}">Heal Self</a></li>
+    {% for enemy in character.battle_set.get.npcs.all %}
+    <li>{{ enemy }}<ul><li>life={{ enemy.life }}, <a href="{% url 'encounter:attack' pk=character.battle_set.get.id targetpk=enemy.id %}"> Attack!</a></li></ul></li>
     {% endfor %}
 </ul>
 {% endblock content %}

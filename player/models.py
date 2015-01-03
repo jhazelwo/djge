@@ -26,3 +26,12 @@ class Config(UltraModel):
         ('60', 'PC'),
     )
     fps = models.CharField(max_length=3, choices=CHOICES, default=CHOICES[0][0])
+
+"""
+class Journal(UltraModel):
+    name = models.ForeignKey(PlayerCharacter)
+    user = models.ForeignKey(User)
+
+    def append(self, event):
+        pass
+"""

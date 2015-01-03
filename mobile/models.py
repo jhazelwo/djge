@@ -14,6 +14,7 @@ NonPlayerCharacter:
     Template objects for mobiles controlled by the program during encounters
 
 """
+import time
 import random
 
 from django.db import models
@@ -80,8 +81,17 @@ class BaseMobile(UltraModel):
     c07 = models.CharField(max_length=8, choices=CHOICES, default=CHOICES[0][0])
     c08 = models.CharField(max_length=8, choices=CHOICES, default=CHOICES[0][0])
 
-    def funkup(self, amount=2):
-        self.funk += amount
+    def funkup(self, amount=None):
+        if amount is not None:
+            # If amount is overridden then just add it without checking
+            self.funk += amount
+        else:
+            amount = 2
+            if self.autoact('funkregn'):
+                self.bark('AUTO: bonus Funk regen')
+                amount = 20  # cost of self.autoact + 10
+            self.funk += amount
+        #
         if self.funk > 100:
             self.funk = 100
         self.save()
@@ -108,8 +118,13 @@ class BaseMobile(UltraModel):
                 if self.funk < 0:
                     self.funk = 0
                 self.save()
-                print('Funk {0} succceeded with roll of {1} being lower than {2}'.format(check, i, chance))
+                # print('Funk {0} succceeded with roll of {1} being lower than {2}'.format(check, i, chance))
                 return True
+        return False
+
+    def is_dead(self):
+        if self.life <= 0:
+            return True
         return False
 
     class Meta:
@@ -151,20 +166,34 @@ class PlayerCharacter(BaseMobile):
             return False
         return this
 
+    def bark(self, event=None):
+        """
+        Update self's journal with 'event'
+        """
+        # self.journal_set.append(event)
+        if event is not None:
+            print('{0} {1}'.format(time.strftime('%Y%m%d.%H%M%S+UTC', time.gmtime()), event))
+            return True
+        return False
+
     def on_death(self):
         """
-        When player dies
-            delete Battle and
-            set location to mobile.category.spawn
-            (or whatever custom action is needed
+        Do custom stuff when a Player's Character dies.
         """
-        # self.where = self.category.spawn
-        # self.life = self.max_life
-        # messages.error(self.request, 'ded')
-        # for this in self.battle_set.npcs.all(): this.delete()
-        # self.log.update('{0} died'.format(self))
+        self.bark('I was killed.')
+        self.where = self.category.spawn
+        self.life = self.life_max
+        for this in self.battle_set.get().npcs.all():
+            this.delete()
         # self.cool -= 9001
+        self.save()
         return True
+
+    def heal_self(self):
+        diff = self.life_max - self.life
+        self.life = self.life_max
+        self.save()
+        return diff
 
 
 class NonPlayerCharacter(BaseMobile):
@@ -189,12 +218,3 @@ class NonPlayerCharacter(BaseMobile):
     # xp = ...
     # $$ = ...
     # parts = ...
-    # spawn_chance = ...
-    # spawn_count = ...
-
-    def on_death(self):
-        """
-        Execute this code when this NPC dies.
-        """
-        # self.battle_set.update_log('{0} died'.format(self))
-        return True

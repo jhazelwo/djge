@@ -2,13 +2,14 @@
 
 {% block pagetitle %} update\{{ object }} {% endblock pagetitle %}
 
-{% block content %}{{ form.errors }}
+{% block wholepage %}
 <form action="" method="post">
+{{ form.errors }}
 <p>name: {{ form.name }}</p>
 <p>notes:</p>
-    {{ form.notes }}
+{{ form.notes }}
 <h4>auto-act:</h4>
-    <table border="1" class="text-center">
+<table border="1" class="table table-bordered text-center" style="background-color: white; color: black;">
     <tr>
         <td>10%</td>
         <td>10%</td>
@@ -40,7 +41,7 @@
         <td>{{ form.c06.1 }}</td>
         <td>{{ form.c07.1 }}</td>
         <td>{{ form.c08.1 }}</td>
-        <td class="text-left">Dodge if monster would hit.</td>
+        <td class="text-left">Dodge if incoming attack would hit.</td>
     </tr>
     <tr>
         <td>{{ form.c01.2 }}</td>
@@ -110,6 +111,6 @@
     </tr>
 </table>
     <br>
-<p class="text-center">{% csrf_token %}<input type="submit" class="btn btn-sm btn-success" value="Save" /><a class="btn btn-sm" href="{{ object.get_absolute_url }}">Cancel</a></p>
+    <p class="text-center">{% csrf_token %}<input type="submit" class="btn btn-sm btn-success" value="Save" /><a class="btn btn-sm" href="{{ object.get_absolute_url }}">Cancel</a></p>
 </form>
-{% endblock content %}
+{% endblock %}

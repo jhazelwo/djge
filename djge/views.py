@@ -41,7 +41,6 @@ class Triage(mixin.RequireUser, generic.TemplateView):
         character = account.playing_toon
         #
         if character.in_combat():
-            context['fight'] = self.request.user.battle_set.filter(name=character).get()
             self.template_name = 'encounter/battle.html'
         #
         context['character'] = character

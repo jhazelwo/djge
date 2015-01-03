@@ -27,6 +27,7 @@
                     <h1 class="alert alert-danger">{{ non_field_error }}</h1>
                 {% endfor %}
         {% endif %}
+            <div class="row">{% block wholepage %}{% endblock %}</div>
             <div class="row"><!-- content-body -->
                 {% if character %}
                     <div class="col-sm-3">
@@ -36,11 +37,19 @@
                             <li>funk: {{ character.funk }}/100</li>
                             <li>damage: {{ character.base_offense }}</li>
                             <li><a href="">Inventory (xx/xx)</a></li>
-                            <li>[<a href="">Heal Self</a>]</li>
+                            {% if character.battle_set.get %}
+                            <li>&nbsp;</li>
+                            <li>
+                                <strong>
+                                    <a href="{% url 'encounter:healself' pk=character.battle_set.get.id %}">
+                                        Heal Self
+                                    </a>
+                                </strong>
+                            </li>
+                            {% endif %}
+                            <!-- for this in char.heal_objects: <a use>this</a> -->
                         </ul>
-                        <hr style="width: 80%; border-top: 1px solid #00FF00;">
-                        <h4>@{{ character.where }}</h4>
-                        <p>{{ character.where.notes }}</p>
+                        <!-- hr style="width: 80%; border-top: 1px solid #00FF00;" -->
                     </div>
                 {% endif %}
                 <div class="col-sm-3">

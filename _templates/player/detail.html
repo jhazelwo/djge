@@ -12,6 +12,8 @@
 </ul>
 <h4>notes:</h4>
 <ul><li>{{ object.notes|linebreaksbr }}</li></ul>
+{% endblock %}
+{% block extra %}
 <h4>auto-act:</h4>
 <ul>
     <li>{{ xtradodg }}% Dodge if opponent would hit.</li>
@@ -24,4 +26,4 @@
 </ul>
 <br>
 <p class="text-center">Born: {{ object.created }} | Updated: {{ object.modified }}</p>
-{% endblock content %}
+{% endblock %}
