@@ -9,7 +9,6 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
 from djge import mixin
-# from mobile.models import NonPlayerCharacter
 from encounter.models import Battle, Combatant
 from encounter.funcs import attack, heal_self
 

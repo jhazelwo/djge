@@ -103,7 +103,7 @@ class PlayerCharacter(BaseMobile):
         unique_together = (('name', 'user'),)
 
     def get_absolute_url(self):
-        return reverse('player:character:detail', kwargs={'pk': self.pk})
+        return reverse('player:detail', kwargs={'pk': self.pk})
 
     def relocate(self, destination):
         if self.in_combat():

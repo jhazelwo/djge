@@ -3,7 +3,7 @@
 {% block pagetitle %}{{ object }}{% endblock pagetitle %}
 
 {% block content %}
-<p><a href="{% url 'index' %}">back</a> | <a href="{% url 'player:character:update' pk=object.id %}">edit</a></p>
+<p><a href="{% url 'index' %}">back</a> | <a href="{% url 'player:update' pk=object.id %}">edit</a></p>
 <h4>{{ object }}</h4>
 <ul>
     <li>type: {{ object.category }}</li>

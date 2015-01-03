@@ -1,23 +1,20 @@
 """
-player/view/move.py
+world/views.py
 """
 import random
 
 from django.views import generic
-from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
 
 from djge import mixin
-from world.models import Location, Category
-from mobile.models import PlayerCharacter, NonPlayerCharacter
-from mobile.models import Category as NonPlayerCharacterCategory
-from player.models import Config
+from world.models import Location
+from mobile.models import NonPlayerCharacter
 from encounter.models import Battle, Combatant
 
 
-class Do(mixin.RequireUser, generic.RedirectView):
+class Move(mixin.RequireUser, generic.RedirectView):
     permanent = False
     query_string = False
     url = reverse_lazy('index')
@@ -32,7 +29,6 @@ class Do(mixin.RequireUser, generic.RedirectView):
             ).filter(
                 category=destination.basemobiletype.get()
             ).get()
-            print(hostile_spawn)
         except ObjectDoesNotExist:
             pass
         if character.relocate(destination) is True:
@@ -44,7 +40,6 @@ class Do(mixin.RequireUser, generic.RedirectView):
                 if created:
                     for each in range(hostile_spawn.spawn_count):
                         dice = random.randint(1, 100)
-                        print(dice)
                         if hostile_spawn.spawn_chance >= dice:
                             new_combatant = Combatant.objects.create(
                                 name=hostile_spawn.name,
@@ -54,4 +49,5 @@ class Do(mixin.RequireUser, generic.RedirectView):
                                 user=self.request.user)
                             newfight.npcs.add(new_combatant)
             #
-        return super(Do, self).get_redirect_url(*args, **kwargs)
+        return super(Move, self).get_redirect_url(*args, **kwargs)
+
