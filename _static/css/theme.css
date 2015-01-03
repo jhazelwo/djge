@@ -1,14 +1,55 @@
 body {
   padding-top: 70px;
   padding-bottom: 30px;
+  background-color: black;
+  color: #00FF00;
+  font-family: monospace;
 }
-
+a,a:visited {
+  color: #00CC00;
+  text-decoration: underline;
+  font-family: monospace;
+}
+a:hover {
+  color: #00FF00;
+  text-decoration: none;
+  font-family: monospace;
+}
+a:active  {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-family: monospace;
+}
+p {
+  color: #00FF00;
+  font-family: monospace;
+}
 .theme-dropdown .dropdown-menu {
   position: static;
   display: block;
   margin-bottom: 20px;
 }
-
 .theme-showcase > p > .btn {
   margin: 5px 0;
+}
+
+.djge-danger, .djge-error {
+  color: red;
+}
+
+.djge-info {
+  color: blue;
+}
+
+.djge-warning {
+  color: yellow;
+}
+
+.djge-success {
+ color: #00FF00;
+}
+
+textarea, input {
+  color: black;
+  font-family: monospace;
 }

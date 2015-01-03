@@ -24,7 +24,7 @@
         <div class="container theme-showcase" role="main">
         {% if messages %}
                 {% for message in messages %}
-                    <p {% if message.tags %} class="bg-{{ message.tags }}"{% endif %}>{{ message }}</p>
+                    <p {% if message.tags %} class="djge-{{ message.tags }}"{% endif %}>{{ message }}</p>
                 {% endfor %}
         {% endif %}
         {% if form.non_field_errors %}

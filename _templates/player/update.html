@@ -4,10 +4,11 @@
 
 {% block content %}{{ form.errors }}
 <form action="" method="post">
-{{ form.name }} {{ object.category }}<br>
-{{ form.notes }}
-<hr>
-    <table border="1">
+<p>name: {{ form.name }}</p>
+<p>notes:</p>
+    {{ form.notes }}
+<h4>auto-act:</h4>
+    <table border="1" class="text-center">
     <tr>
         <td>10%</td>
         <td>10%</td>
@@ -17,7 +18,7 @@
         <td>10%</td>
         <td>10%</td>
         <td>10%</td>
-        <td>Funk Name</td>
+        <td class="text-left">Funk Name</td>
     </tr>
     <tr>
         <td>{{ form.c01.0 }}</td>
@@ -28,7 +29,7 @@
         <td>{{ form.c06.0 }}</td>
         <td>{{ form.c07.0 }}</td>
         <td>{{ form.c08.0 }}</td>
-        <td>None</td>
+        <td class="text-left">None</td>
     </tr>
     <tr>
         <td>{{ form.c01.1 }}</td>
@@ -39,7 +40,7 @@
         <td>{{ form.c06.1 }}</td>
         <td>{{ form.c07.1 }}</td>
         <td>{{ form.c08.1 }}</td>
-        <td>Dodge if monster would hit.</td>
+        <td class="text-left">Dodge if monster would hit.</td>
     </tr>
     <tr>
         <td>{{ form.c01.2 }}</td>
@@ -50,7 +51,7 @@
         <td>{{ form.c06.2 }}</td>
         <td>{{ form.c07.2 }}</td>
         <td>{{ form.c08.2 }}</td>
-        <td>Double damage if you hit.</td>
+        <td class="text-left">Double damage if you hit.</td>
     </tr>
     <tr>
         <td>{{ form.c01.3 }}</td>
@@ -61,7 +62,7 @@
         <td>{{ form.c06.3 }}</td>
         <td>{{ form.c07.3 }}</td>
         <td>{{ form.c08.3 }}</td>
-        <td>Extra Funk regen; checked during funk regen after you finish an attack</td>
+        <td class="text-left">Extra Funk regen; checked during funk regen after you finish an attack</td>
     </tr>
     <tr>
         <td>{{ form.c01.4 }}</td>
@@ -72,7 +73,7 @@
         <td>{{ form.c06.4 }}</td>
         <td>{{ form.c07.4 }}</td>
         <td>{{ form.c08.4 }}</td>
-        <td>Heal self after monster attack.</td>
+        <td class="text-left">Heal self after monster attack.</td>
     </tr>
     <tr>
         <td>{{ form.c01.5 }}</td>
@@ -83,7 +84,7 @@
         <td>{{ form.c06.5 }}</td>
         <td>{{ form.c07.5 }}</td>
         <td>{{ form.c08.5 }}</td>
-        <td>Steal money/items from monster during a successful attack.</td>
+        <td class="text-left">Steal money/items from monster during a successful attack.</td>
     </tr>
     <tr>
         <td>{{ form.c01.6 }}</td>
@@ -94,7 +95,7 @@
         <td>{{ form.c06.6 }}</td>
         <td>{{ form.c07.6 }}</td>
         <td>{{ form.c08.6 }}</td>
-        <td>Add another hit during successful attack, damage cannot be doubled</td>
+        <td class="text-left">Add another hit during successful attack, damage cannot be doubled</td>
     </tr>
     <tr>
         <td>{{ form.c01.7 }}</td>
@@ -105,10 +106,10 @@
         <td>{{ form.c06.7 }}</td>
         <td>{{ form.c07.7 }}</td>
         <td>{{ form.c08.7 }}</td>
-        <td>Chance to boost healing during heal-self or auto-heal.</td>
+        <td class="text-left">Chance to boost healing during heal-self or auto-heal.</td>
     </tr>
 </table>
-<hr>
-    {% csrf_token %}<input type="submit" class="btn btn-sm btn-info" value="Save" /><a class="btn btn-sm btn-default" href="{{ object.get_absolute_url }}">Cancel</a>
+    <br>
+<p class="text-center">{% csrf_token %}<input type="submit" class="btn btn-sm btn-success" value="Save" /><a class="btn btn-sm" href="{{ object.get_absolute_url }}">Cancel</a></p>
 </form>
 {% endblock content %}
