@@ -59,7 +59,7 @@ class InstallView(mixin.RequireUser, generic.TemplateView):
         #
         if LocationCatagory.objects.count() == 0:
             this = LocationCatagory.objects.create(
-                name='sanctuary',
+                name='safe',
                 notes='safe location',
             )
             messages.success(self.request, 'Made {0}'.format(this))

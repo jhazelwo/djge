@@ -9,8 +9,7 @@ from django.shortcuts import get_object_or_404
 
 from djge import mixin
 from world.models import Location
-from mobile.models import PlayerCharacter
-from player.models import Config
+from player.models import Config, PlayerCharacter
 from player import forms
 
 MAX_TOONS = 5

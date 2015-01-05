@@ -14,18 +14,13 @@ NonPlayerCharacter:
     Template objects for mobiles controlled by the program during encounters
 
 """
-import time
 import random
 
 from django.db import models
-from django.core.urlresolvers import reverse
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
 
 from djge.models import UltraModel
 from world.models import Location
-from inventory.models import Item, Container
 
 
 class Category(UltraModel):
@@ -118,7 +113,7 @@ class BaseMobile(UltraModel):
                 if self.funk < 0:
                     self.funk = 0
                 self.save()
-                # print('Funk {0} succceeded with roll of {1} being lower than {2}'.format(check, i, chance))
+                # print('Funk {0} succeeded with roll of {1} being lower than {2}'.format(check, i, chance))
                 return True
         return False
 
@@ -129,71 +124,6 @@ class BaseMobile(UltraModel):
 
     class Meta:
         abstract = True
-
-
-class PlayerCharacter(BaseMobile):
-    """
-    A mobile controlled by a player (real person)
-    """
-    user = models.ForeignKey(User)
-    where = models.ForeignKey(Location)
-    equip_offense = models.ForeignKey(Item, null=True, blank=True, related_name='pceqoff')
-    equip_defense = models.ForeignKey(Item, null=True, blank=True, related_name='pceqdef')
-    storage = models.ForeignKey(Container, null=True, blank=True)
-
-    class Meta:
-        unique_together = (('name', 'user'),)
-
-    def get_absolute_url(self):
-        return reverse('player:detail', kwargs={'pk': self.pk})
-
-    def relocate(self, destination):
-        if self.in_combat():
-            return False
-        if destination not in self.where.link.all():
-            return False
-        self.where = destination
-        self.save()
-        return True
-
-    def in_combat(self):
-        try:
-            this = self.battle_set.get()
-        except ObjectDoesNotExist:
-            return False
-        if this.npcs.count() == 0:
-            this.delete()
-            return False
-        return this
-
-    def bark(self, event=None):
-        """
-        Update self's journal with 'event'
-        """
-        # self.journal_set.append(event)
-        if event is not None:
-            print('{0} {1}'.format(time.strftime('%Y%m%d.%H%M%S+UTC', time.gmtime()), event))
-            return True
-        return False
-
-    def on_death(self):
-        """
-        Do custom stuff when a Player's Character dies.
-        """
-        self.bark('I was killed.')
-        self.where = self.category.spawn
-        self.life = self.life_max
-        for this in self.battle_set.get().npcs.all():
-            this.delete()
-        # self.cool -= 9001
-        self.save()
-        return True
-
-    def heal_self(self):
-        diff = self.life_max - self.life
-        self.life = self.life_max
-        self.save()
-        return diff
 
 
 class NonPlayerCharacter(BaseMobile):

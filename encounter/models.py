@@ -7,7 +7,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from djge.models import UltraModel
-from mobile.models import PlayerCharacter, BaseMobile
+from mobile.models import BaseMobile
+from player.models import PlayerCharacter
 
 
 class Combatant(BaseMobile):

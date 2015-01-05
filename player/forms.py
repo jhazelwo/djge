@@ -2,7 +2,7 @@
 player/forms.py
 """
 from django.forms import ModelForm, RadioSelect
-from mobile import models
+from . import models
 
 
 class CreateCharacter(ModelForm):
