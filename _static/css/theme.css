@@ -35,18 +35,30 @@ p {
 
 .djge-danger, .djge-error {
   color: red;
+  text-decoration: underline;
+  -moz-text-decoration-color: red; /* Code for Firefox */
+  text-decoration-color: red;
 }
 
 .djge-info {
   color: blue;
+  text-decoration: underline;
+  -moz-text-decoration-color: blue; /* Code for Firefox */
+  text-decoration-color: blue;
 }
 
 .djge-warning {
   color: yellow;
+  text-decoration: underline;
+  -moz-text-decoration-color: yellow; /* Code for Firefox */
+  text-decoration-color: yellow;
 }
 
 .djge-success {
  color: #00FF00;
+  text-decoration: underline;
+  -moz-text-decoration-color:  #00FF00; /* Code for Firefox */
+  text-decoration-color:  #00FF00;
 }
 
 textarea, input {
@@ -56,3 +68,5 @@ textarea, input {
 ul.quiet {
     list-style-type: none;
 }
+
+

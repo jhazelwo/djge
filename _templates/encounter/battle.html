@@ -13,8 +13,6 @@
 {% endblock content %}
 
 {% block extra %}
-    {# move this to context #}
-    {% for this in character.journal_set.all|slice:":8" %}
-        {{ this.modified|time:"His" }}, {{ this.notes }}<br>
-    {% endfor %}
+
+
 {% endblock extra %}

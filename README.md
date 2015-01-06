@@ -2,12 +2,6 @@ DJGE
 ====
 
 ### TODO
-* Add Journal model to player
-* For PC bark to Journal
-* Put Journal in third column.
-
-* move messages back to header
-
 * Add world.models.Location.get_npcs('attitude') to return any NPCs that spawn at that location matching given attitude
 
 * Make it possible to link multiple mobile.categories to a single world.location so we can spawn

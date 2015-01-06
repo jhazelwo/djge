@@ -48,6 +48,6 @@ class Move(mixin.RequireUser, generic.RedirectView):
                                 funk=100,
                                 user=self.request.user)
                             newfight.npcs.add(new_combatant)
+                    character.bark('Attacked by {0} {1}s!'.format(newfight.npcs.count(), hostile_spawn))
             #
         return super(Move, self).get_redirect_url(*args, **kwargs)
-

@@ -39,11 +39,16 @@ class Triage(mixin.RequireUser, generic.TemplateView):
         if not account.playing_toon:
             return redirect(reverse('player:index'))
         character = account.playing_toon
+        context['journal'] = character.journal_set.all()[:16]
         #
         if character.in_combat():
             self.template_name = 'encounter/battle.html'
         #
         context['character'] = character
+        # messages.info(self.request, 'info')
+        # messages.success(self.request, 'success')
+        # messages.error(self.request, 'error')
+        # messages.warning(self.request, 'warning')
         return self.render_to_response(context)
 
 

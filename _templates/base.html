@@ -22,13 +22,20 @@
     </head>
     <body role="document">
         <div class="container theme-showcase" role="main">
+        {% if messages %}
+            <center>
+                {% for message in messages %}
+                    <p {% if message.tags %} class="djge-{{ message.tags }}"{% endif %}>{{ message }}</p>
+                {% endfor %}
+            </center>
+        {% endif %}
         {% if form.non_field_errors %}
                 {% for non_field_error in form.non_field_errors %}
                     <h1 class="alert alert-danger">{{ non_field_error }}</h1>
                 {% endfor %}
         {% endif %}
             <div class="row">{% block wholepage %}{% endblock %}</div>
-            <div class="row"><!-- content-body -->
+            <div class="row">
                 {% if character %}
                     <div class="col-sm-3">
                         <h4><a href="{% url 'player:detail' pk=character.id %}">{{ character }}</a></h4>
@@ -56,14 +63,18 @@
                     {% block content %}{% endblock %}
                 </div>
                 <div class="col-sm-6">
-                    {% if messages %}
-                            {% for message in messages %}
-                                <p {% if message.tags %} class="djge-{{ message.tags }}"{% endif %}>{{ message }}</p>
-                            {% endfor %}
-                    {% endif %}
+                        <ul class="quiet">
+                        {% for this in journal %}
+                            {% if this.notes %}
+                            <li>[{{ this.modified|time:"H\:i\:s" }}] {{ this.notes }}</li>
+                            {% else %}
+                            <li>&nbsp;</li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
                     {% block extra %}{% endblock %}
                 </div>
-            </div><!-- /content-body -->
+            </div>
         </div><!-- class="container theme-showcase" role="main" -->
         <script src="{% static 'js/jquery.min.js' %}"></script><!-- Placed at the end of the document so the pages load faster -->        
         <script src="{% static 'js/bootstrap.min.js' %}"></script><!-- Bootstrap core JavaScript -->
