@@ -19,6 +19,9 @@ class Journal(UltraModel):
     """
     name = models.ForeignKey('PlayerCharacter')
 
+    class Meta:
+        ordering = ['-created']
+
 
 class PlayerCharacter(BaseMobile):
     """
