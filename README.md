@@ -7,7 +7,6 @@ DJGE
 * Make it possible to link multiple mobile.categories to a single world.location so we can spawn
  multiple types of combatants during random encounters.
 
-* create /djge/dice.py roll(chance=100) where chance is 1-100 but use giant numbers in the actual function, and return bool
 
 * Equips need to go back into BaseMobile, NPCs can equip stuff too
 * Charecter/equip weapon, dropdown, queryset=Items.obj.filter(character).filter(offense)
