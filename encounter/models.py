@@ -62,6 +62,7 @@ class Battle(UltraModel):
         target.bark('Took {0} damage from {1}'.format(total_damage, attacker))
         target.save()
         if target.is_dead():
+            attacker.bark('Killed {0}!'.format(target))
             target.on_death()
         #
         if self.npcs.count() == 0:

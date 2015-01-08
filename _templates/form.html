@@ -3,6 +3,10 @@
 {% block pagetitle %} __form__ {% endblock pagetitle %}
 
 {% block content %}
+    {{ object }}
+    {% for this in object_list %}
+        {{ this }}
+    {% endfor %}
     {% for field in form %}
         {{ field.label }}
         {{ field.label_tag }}: {{ field }}

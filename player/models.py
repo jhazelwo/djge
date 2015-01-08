@@ -29,9 +29,6 @@ class PlayerCharacter(BaseMobile):
     """
     user = models.ForeignKey(User)
     where = models.ForeignKey(Location)
-    equip_offense = models.ForeignKey(Item, null=True, blank=True, related_name='pceqoff')
-    equip_defense = models.ForeignKey(Item, null=True, blank=True, related_name='pceqdef')
-    storage = models.ForeignKey(Container, null=True, blank=True)
 
     class Meta:
         unique_together = (('name', 'user'),)
@@ -100,6 +97,8 @@ class Config(UltraModel):
     """
     name = models.ForeignKey(User, unique=True)
     playing_toon = models.ForeignKey('PlayerCharacter', null=True, blank=True)
+    #
+    # Account-wide storage
     storage = models.ForeignKey(Container, null=True, blank=True)
     CHOICE = (
         ('29',  'Unplayable'),

@@ -8,7 +8,8 @@ from djge.models import UltraModel
 
 
 class Container(UltraModel):
-    size = models.SmallIntegerField(default=16)
+    name = models.CharField(max_length=64, unique=False, default='')
+    size = models.SmallIntegerField(default=1)
     contents = models.ManyToManyField('Item', null=True, blank=True)
 
 
@@ -22,6 +23,9 @@ class Enchant(UltraModel):
 
 
 class BaseItem(UltraModel):
+    """
+    Global item templates
+    """
     name = models.CharField(max_length=64, unique=True)
     cost = models.PositiveIntegerField(default=0)
     power = models.IntegerField(default=1)
@@ -45,6 +49,9 @@ class BaseItem(UltraModel):
 
 
 class Item(UltraModel):
+    """
+    In use this is an Instance of BaseItem.
+    """
     name = models.CharField(max_length=64, default='DEFAULT')
     base = models.ForeignKey('BaseItem')
     enchant = models.ManyToManyField('Enchant', null=True, blank=True)

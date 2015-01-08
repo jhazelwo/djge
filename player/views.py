@@ -11,6 +11,7 @@ from djge import mixin
 from world.models import Location
 from player.models import Config, PlayerCharacter
 from player import forms
+from inventory.models import Container
 
 MAX_TOONS = 5
 
@@ -90,3 +91,22 @@ class Select(mixin.RequireUser, generic.RedirectView):
         account.playing_toon = get_object_or_404(PlayerCharacter, user=self.request.user, pk=self.kwargs.get('pk'))
         account.save()
         return super(Select, self).get_redirect_url(*args, **kwargs)
+
+
+class Inventory(mixin.RequireUser, generic.DetailView):
+    """
+
+    """
+    model = Container
+    template_name = 'player/inventory.html'
+
+    def get_object(self, queryset=None):
+        character = self.request.user.config_set.get().playing_toon
+        # messages.info(self.request, dir(character.storage))
+        return character.storage
+
+    def get_context_data(self, **kwargs):
+        context = super(Inventory, self).get_context_data(**kwargs)
+        context['character'] = self.object.playercharacter_set.get()
+        # context['inventory_form'] = InventoryForm
+        return context

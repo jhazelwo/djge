@@ -17,18 +17,25 @@ NonPlayerCharacter:
 import random
 
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 
+from djge import dice
 from djge.models import UltraModel
 from world.models import Location
+from inventory.models import Container, Item
 
 
 class Category(UltraModel):
     """
     A species/race/type of Mobile. Things like Dragon, Elf, Stationwagon, Fighter Jet, etc...
 
+    playable determines if a User can select this category curing character creation.
+
     If playable then 'spawn' will be where new PlayerCharacters will be placed on creation.
     else spawn is the world.Location where the NPC will spawn during /encounter/s.
+
+    life_max is what a mobile's maximum life is set to when instantiated
+
+    energy_max will be the resourced used to limit non-automatic abilities (like mana for spells)
     """
     name = models.CharField(max_length=64)
     playable = models.BooleanField(default=False)
@@ -52,8 +59,9 @@ class BaseMobile(UltraModel):
     #
     category = models.ForeignKey('Category', null=True)
     #
-    base_offense = models.IntegerField(default=1)
+    storage = models.ForeignKey(Container, null=True, blank=True)
     #
+    base_offense = models.IntegerField(default=1)
     base_defense = models.IntegerField(default=1)
     #
     funk = models.IntegerField(default=100)
@@ -84,7 +92,7 @@ class BaseMobile(UltraModel):
             amount = 2
             if self.autoact('funkregn'):
                 self.bark('AUTO: bonus Funk regen')
-                amount = 20  # cost of self.autoact + 10
+                amount = 20  # cost of auto-action + 10
             self.funk += amount
         #
         if self.funk > 100:
@@ -107,8 +115,7 @@ class BaseMobile(UltraModel):
             if this == check:
                 chance += 1
         if chance > 0:
-            i = random.randint(1, 10)
-            if i <= chance:
+            if dice.roll(chance):
                 self.funk -= 10
                 if self.funk < 0:
                     self.funk = 0
@@ -131,6 +138,9 @@ class NonPlayerCharacter(BaseMobile):
     Your static/global inventory of NPCs, monsters, vendors, kings, spaceships, whatever.
 
     Use classes in /encounter/ to instantiate NPC objects here.
+
+    Spawn chance (0-100) is an integer that represents the percentage chance the mobile will spawn it is checked
+     once per spawn_count.
     """
     CHOICE = (
         ('10',  'Friendly'),
@@ -139,11 +149,7 @@ class NonPlayerCharacter(BaseMobile):
         ('40',  'Invulnerable'),
     )
     attitude = models.CharField(max_length=2, choices=CHOICE, default=CHOICE[0][0])
-    spawn_chance = models.IntegerField(default=100,
-                                       validators=[
-                                           MinValueValidator(1),
-                                           MaxValueValidator(100)
-                                       ])
+    spawn_chance = models.IntegerField(default=100)
     spawn_count = models.IntegerField(default=1)
     # xp = ...
     # $$ = ...

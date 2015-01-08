@@ -7,8 +7,7 @@ from djge.models import UltraModel
 
 
 class Category(UltraModel):
-    name = models.CharField(max_length=8, unique=True)
-    random_battles = models.BooleanField(default=False)
+    name = models.CharField(max_length=64, unique=True)
 
 
 class Location(UltraModel):

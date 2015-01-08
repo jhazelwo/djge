@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block pagetitle %} Character Storage {% endblock pagetitle %}
+
+{% block content %}
+    {{ object.playercharacter_set.get }}
+    {% for this in object.contents.all %}
+        {{ this }}<hr>
+    {% empty %}
+        Container is empty
+    {% endfor %}
+{% endblock content %}

@@ -24,8 +24,8 @@ class Attack(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
         if target not in this_fight.npcs.all():
             raise Http404
         #
-        this_fight.attack(character, target)
         character.bark('')
+        this_fight.attack(character, target)
         #
         for this_npc in this_fight.npcs.all():
             this_fight.attack(this_npc, character)
