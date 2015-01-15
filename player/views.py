@@ -9,11 +9,13 @@ from django.shortcuts import get_object_or_404
 
 from djge import mixin
 from world.models import Location
-from player.models import Config, PlayerCharacter
-from player import forms
 from inventory.models import Container
 
+from player.models import Config, PlayerCharacter
+from player import forms
+
 MAX_TOONS = 5
+CHAR_STORAGE = 16
 
 
 class Index(mixin.RequireUser, generic.ListView):
@@ -44,9 +46,10 @@ class Create(mixin.RequireUser, generic.CreateView):
             messages.error(self.request, 'Already at max.', extra_tags='danger')
             return super(Create, self).form_invalid(form)
         self.object = form.save(commit=False)
+        self.object.storage = Container.objects.create(name=self.object.name, size=CHAR_STORAGE)
         self.object.user = self.request.user
-        self.object.level = 1
         self.object.life = self.object.category.life_max
+        self.object.life_max = self.object.category.life_max
         try:
             self.object.where = self.object.category.spawn
         except ValueError:
@@ -97,16 +100,15 @@ class Inventory(mixin.RequireUser, generic.DetailView):
     """
 
     """
-    model = Container
+    model = PlayerCharacter
     template_name = 'player/inventory.html'
 
     def get_object(self, queryset=None):
         character = self.request.user.config_set.get().playing_toon
-        # messages.info(self.request, dir(character.storage))
-        return character.storage
+        obj = character.storage
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super(Inventory, self).get_context_data(**kwargs)
         context['character'] = self.object.playercharacter_set.get()
-        # context['inventory_form'] = InventoryForm
         return context

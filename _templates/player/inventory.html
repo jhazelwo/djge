@@ -3,7 +3,7 @@
 {% block pagetitle %} Character Storage {% endblock pagetitle %}
 
 {% block content %}
-    {{ object.playercharacter_set.get }}
+    <p>Character Storage [{{ object.contents.count }} / {{ object.size }}]</p>
     {% for this in object.contents.all %}
         {{ this }}<hr>
     {% empty %}

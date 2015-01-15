@@ -29,6 +29,12 @@ class PlayerCharacter(BaseMobile):
     """
     user = models.ForeignKey(User)
     where = models.ForeignKey(Location)
+    #
+    equip_offense01 = models.ForeignKey(Item, blank=True, null=True, related_name='bmeo01')
+    #
+    equip_defense01 = models.ForeignKey(Item, blank=True, null=True, related_name='bmed01')
+    equip_defense02 = models.ForeignKey(Item, blank=True, null=True, related_name='bmed02')
+    #
 
     class Meta:
         unique_together = (('name', 'user'),)
@@ -97,6 +103,7 @@ class Config(UltraModel):
     """
     name = models.ForeignKey(User, unique=True)
     playing_toon = models.ForeignKey('PlayerCharacter', null=True, blank=True)
+    # auto_loot = models.BooleanField(default=True)
     #
     # Account-wide storage
     storage = models.ForeignKey(Container, null=True, blank=True)

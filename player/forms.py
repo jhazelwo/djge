@@ -2,10 +2,12 @@
 player/forms.py
 """
 from django.forms import ModelForm, RadioSelect
+from inventory.models import Item
 from . import models
 
 
 class CreateCharacter(ModelForm):
+
     class Meta:
         fields = (
             'name',
@@ -16,6 +18,7 @@ class CreateCharacter(ModelForm):
 
 
 class UpdateCharacter(ModelForm):
+
     class Meta:
         fields = (
             'name',
