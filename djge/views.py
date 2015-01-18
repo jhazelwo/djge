@@ -13,6 +13,7 @@ from world.models import Location
 from world.models import Category as LocationCatagory
 from mobile.models import Category as MobileCategory
 # from mobile.models import NonPlayerCharacter
+from inventory.models import BaseItem
 
 
 class LogOut(generic.RedirectView):
@@ -61,6 +62,14 @@ class InstallView(mixin.RequireUser, generic.TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
+        #
+        if BaseItem.objects.count() == 0:
+            this = BaseItem.objects.create(
+                name='a base item',
+                quality='70',   # 'Legendary'
+                category='30',  # 'offense'
+            )
+            messages.success(self.request, 'Made {0}'.format(this))
         #
         if LocationCatagory.objects.count() == 0:
             this = LocationCatagory.objects.create(
