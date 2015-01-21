@@ -7,6 +7,9 @@ from . import models
 
 
 class CreateCharacter(ModelForm):
+    """
+    Create a character
+    """
 
     class Meta:
         fields = (
@@ -18,6 +21,9 @@ class CreateCharacter(ModelForm):
 
 
 class UpdateCharacter(ModelForm):
+    """
+    Let user modify name, notes, and auto-act values of a character
+    """
 
     class Meta:
         fields = (
@@ -43,3 +49,21 @@ class UpdateCharacter(ModelForm):
             'c07': RadioSelect(),
             'c08': RadioSelect(),
         }
+
+
+class Settings(ModelForm):
+    """
+    Account-wide settings.
+    """
+
+    class Meta:
+        fields = (
+            'auto_loot',
+            'fov',
+            'fps',
+            )
+        model = models.Config
+        widgets = {
+            'fov': RadioSelect(),
+            'fps': RadioSelect(),
+            }

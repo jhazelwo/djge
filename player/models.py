@@ -103,7 +103,7 @@ class Config(UltraModel):
     """
     name = models.ForeignKey(User, unique=True)
     playing_toon = models.ForeignKey('PlayerCharacter', null=True, blank=True)
-    # auto_loot = models.BooleanField(default=True)
+    auto_loot = models.BooleanField(default=True)
     #
     # Account-wide storage
     storage = models.ForeignKey(Container, null=True, blank=True)

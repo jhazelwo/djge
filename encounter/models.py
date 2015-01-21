@@ -12,6 +12,9 @@ from player.models import PlayerCharacter
 
 
 class Combatant(BaseMobile):
+    """
+    Mutable copy of a mobile.models.NonPlayerCharacter
+    """
     user = models.ForeignKey(User)
 
     def bark(self, event=None):
@@ -32,10 +35,12 @@ class Combatant(BaseMobile):
 
 
 class Battle(UltraModel):
+    """
+    Combat between a player and NPC(s).
+    """
     name = models.ForeignKey(PlayerCharacter, unique=True)
     user = models.ForeignKey(User)
     npcs = models.ManyToManyField('Combatant')
-    # log = ...
 
     def delete(self, using=None):
         for this in self.npcs.all():

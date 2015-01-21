@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 
 class RequireUser(object):
     """ Require user logged in """
-    mixin_messages = False
+    mixin_messages = True
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated():

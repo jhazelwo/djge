@@ -2,7 +2,6 @@
 inventory/models.py
 """
 from django.db import models
-from django.contrib.auth.models import User
 
 from djge.models import UltraModel
 
@@ -14,17 +13,26 @@ class Container(UltraModel):
 
 
 class Attribute(UltraModel):
+    """
+    The 'uber' in '+1 to uber'
+    Defined what attribute is affected by the calling enchant.
+    Nothing uses this right now and the structure of this might be refactored.
+    """
     name = models.CharField(max_length=64, unique=True)
 
 
 class Enchant(UltraModel):
-    name = models.ForeignKey('Attribute', related_name='enchant')
+    """
+    '+1 to uber'
+    """
     value = models.IntegerField(default=0)
+    # ...to...
+    name = models.ForeignKey('Attribute', related_name='enchant')
 
 
 class BaseItem(UltraModel):
     """
-    Global item templates
+    Global item templates.
     """
     name = models.CharField(max_length=64, unique=True)
     cost = models.PositiveIntegerField(default=0)
@@ -50,7 +58,7 @@ class BaseItem(UltraModel):
 
 class Item(UltraModel):
     """
-    In use this is an Instance of BaseItem.
+    Mutable copy of a BaseItem.
     """
     name = models.CharField(max_length=64, default='DEFAULT')
     base = models.ForeignKey('BaseItem')

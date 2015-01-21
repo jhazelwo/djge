@@ -61,12 +61,10 @@ p {
   text-decoration-color:  #00FF00;
 }
 
-textarea, input {
+textarea, input, select {
   color: black;
   font-family: monospace;
 }
 ul.quiet {
     list-style-type: none;
 }
-
-

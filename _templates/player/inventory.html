@@ -3,8 +3,8 @@
 {% block pagetitle %} Character Storage {% endblock pagetitle %}
 
 {% block content %}
-    <p>Character Storage [{{ object.contents.count }} / {{ object.size }}]</p>
-    {% for this in object.contents.all %}
+    <p>Character Storage [{{ character.storage.contents.count }} / {{ character.storage.size }}]</p>
+    {% for this in character.storage.contents.all %}
         {{ this }}<hr>
     {% empty %}
         Container is empty

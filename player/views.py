@@ -19,6 +19,7 @@ CHAR_STORAGE = 16
 
 
 class Index(mixin.RequireUser, generic.ListView):
+    """    List of characters    """
     model = PlayerCharacter
     template_name = 'player/index.html'
     
@@ -31,6 +32,7 @@ class Index(mixin.RequireUser, generic.ListView):
 
 
 class Create(mixin.RequireUser, generic.CreateView):
+    """    Create a character    """
     form_class = forms.CreateCharacter
     model = PlayerCharacter
     template_name = 'player/create.html'
@@ -59,6 +61,7 @@ class Create(mixin.RequireUser, generic.CreateView):
 
 
 class Detail(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
+    """    View details of a character    """
     model = PlayerCharacter
     template_name = 'player/detail.html'
 
@@ -79,12 +82,14 @@ class Detail(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
 
 
 class Update(mixin.RequireUser, mixin.RequireOwner, generic.UpdateView):
+    """    Edit a character    """
     form_class = forms.UpdateCharacter
     model = PlayerCharacter
     template_name = 'player/update.html'
 
 
 class Select(mixin.RequireUser, generic.RedirectView):
+    """    Enter game using selected character    """
     permanent = False
     query_string = False
     url = reverse_lazy('index')
@@ -96,19 +101,30 @@ class Select(mixin.RequireUser, generic.RedirectView):
         return super(Select, self).get_redirect_url(*args, **kwargs)
 
 
-class Inventory(mixin.RequireUser, generic.DetailView):
-    """
-
-    """
-    model = PlayerCharacter
+class Inventory(mixin.RequireUser, generic.TemplateView):
+    """    Storage for a character    """
     template_name = 'player/inventory.html'
 
-    def get_object(self, queryset=None):
-        character = self.request.user.config_set.get().playing_toon
-        obj = character.storage
-        return obj
-
     def get_context_data(self, **kwargs):
+        """
+        Provide {{character}} variable for base.html
+        This template gets storage as relation from 'character'
+        """
         context = super(Inventory, self).get_context_data(**kwargs)
-        context['character'] = self.object.playercharacter_set.get()
+        context['character'] = self.request.user.playercharacter_set.get()
         return context
+
+
+class Settings(mixin.RequireUser, generic.UpdateView):
+    """    Edit account settings    """
+    form_class = forms.Settings
+    model = Config
+    template_name = 'player/settings.html'
+    # success_url = reverse_lazy('player:settings')
+
+    def get_object(self, queryset=None):
+        return self.request.user.config_set.get()
+
+    def get_success_url(self):
+        messages.success(self.request, 'Changes saved!')
+        return reverse_lazy('player:settings')

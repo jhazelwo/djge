@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block pagetitle %} Settings {% endblock pagetitle %}
+
+{% block content %}
+    <form action="" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <p class="text-left">
+            <input type="submit" class="btn btn-sm btn-success" value="Save" />
+            <a class="btn btn-sm" href="{% url 'index' %}">Cancel</a>
+        </p>
+    </form>
+{% endblock content %}
