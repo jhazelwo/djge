@@ -67,7 +67,7 @@ class Detail(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(Detail, self).get_context_data(**kwargs)
-        me = context['object']
+        obj = context['object']
         context['nonenone'] = 0
         context['xtradodg'] = 0
         context['dbledamg'] = 0
@@ -76,7 +76,7 @@ class Detail(mixin.RequireUser, mixin.RequireOwner, generic.DetailView):
         context['hitsteal'] = 0
         context['dbleatta'] = 0
         context['dbleheal'] = 0
-        for this in [me.c01, me.c02, me.c03, me.c04, me.c05, me.c06, me.c07, me.c08]:
+        for this in [obj.c01, obj.c02, obj.c03, obj.c04, obj.c05, obj.c06, obj.c07, obj.c08]:
             context[this] += 10
         return context
 
@@ -86,6 +86,12 @@ class Update(mixin.RequireUser, mixin.RequireOwner, generic.UpdateView):
     form_class = forms.UpdateCharacter
     model = PlayerCharacter
     template_name = 'player/update.html'
+
+    def form_valid(self, form):
+        if self.object.in_combat():
+            messages.warning(self.request, 'Sorry, cannot save while character is in combat.')
+            return super(Update, self).form_invalid(form)
+        return super(Update, self).form_valid(form)
 
 
 class Select(mixin.RequireUser, generic.RedirectView):
@@ -120,7 +126,6 @@ class Settings(mixin.RequireUser, generic.UpdateView):
     form_class = forms.Settings
     model = Config
     template_name = 'player/settings.html'
-    # success_url = reverse_lazy('player:settings')
 
     def get_object(self, queryset=None):
         return self.request.user.config_set.get()
