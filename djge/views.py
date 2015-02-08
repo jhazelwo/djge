@@ -30,11 +30,10 @@ class Triage(mixin.RequireUser, generic.TemplateView):
     """
     Default / view, show data based on character's state.
     """
-    template_name = 'impossibru/404.html'
+    template_name = 'world/move.html'
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        self.template_name = 'world/move.html'
         #
         account, created = Config.objects.get_or_create(name=self.request.user)
         if not account.playing_toon:

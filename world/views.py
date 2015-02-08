@@ -23,35 +23,30 @@ class Move(mixin.RequireUser, generic.RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         destination = get_object_or_404(Location, id=kwargs.get('id'))
         character = self.request.user.config_set.get().playing_toon
-        hostile_spawn = None
-        try:
-            hostile_spawn = NonPlayerCharacter.objects.filter(
-                attitude='30'  # hostile
-            ).filter(
-                category=destination.basemobiletype.get()
-            ).get()
-        except ObjectDoesNotExist:
-            pass
+        #
+        # Find all NPC objects linked to this location by their category and are hostile.
+        npcs = NonPlayerCharacter.objects.filter(attitude='30').filter(category=destination.basemobiletype.get())
         if character.relocate(destination) is True:
             character.funkup(4)
             character.lifeup()
             character.bark('Entered {0}'.format(destination))
-            if hostile_spawn:
+            if npcs.count() is not 0:
+                npcs = npcs.get()
                 newfight, created = Battle.objects.get_or_create(name=character, user=self.request.user)
                 if created:
-                    for each in range(hostile_spawn.spawn_count):
-                        if dice.roll(hostile_spawn.spawn_chance):
+                    for each in range(npcs.spawn_count):
+                        if dice.roll(npcs.spawn_chance):
                             new_combatant = Combatant.objects.create(
-                                name=hostile_spawn.name,
-                                life=hostile_spawn.life_max,
-                                life_max=hostile_spawn.life_max,
-                                base_offense=hostile_spawn.base_offense,
+                                name=npcs.name,
+                                life=npcs.life_max,
+                                life_max=npcs.life_max,
+                                base_offense=npcs.base_offense,
                                 funk=100,
                                 user=self.request.user)
                             newfight.npcs.add(new_combatant)
                     if newfight.npcs.count() == 1:
-                        character.bark('Attacked by a {0}!'.format(hostile_spawn))
+                        character.bark('Attacked by a {0}!'.format(npcs))
                     elif newfight.npcs.count() > 1:
-                        character.bark('Attacked by a group of {0}s!'.format(hostile_spawn))
+                        character.bark('Attacked by a group of {0}s!'.format(npcs))
             #
         return super(Move, self).get_redirect_url(*args, **kwargs)
